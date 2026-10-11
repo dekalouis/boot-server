@@ -1,9 +1,10 @@
 import express, { type Express, type Request, type Response } from 'express';
 
 const app: Express = express();
+const PORT = 8080;
 
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('Hello World!');
-// });
+app.use(express.static("."));
 
-app.listen(8080);
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
+});
