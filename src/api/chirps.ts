@@ -2,15 +2,17 @@ import type { Request, Response } from "express";
 import { respondWithJSON } from "./json.js";
 import { BadRequest, NotFoundError } from "./errors.js";
 import { createChirp, getChirpById, getChirps } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import { config } from "../config.js";
 
 export async function handlerCreateChirp(req: Request, res: Response): Promise<void> {
   type parameters = {
     body: string;
-    userId: string;
+    // userId: string;
   };
 
   const params: parameters = req.body;
-  if (!params.body || !params.userId) {
+  if (!params.body) {
     throw new BadRequest("Missing required fields!");
   }
 
@@ -40,9 +42,12 @@ export async function handlerCreateChirp(req: Request, res: Response): Promise<v
       }).join(" ");
     return cleanedChirp;
   }
-  const cleaned = validateChirp(params.body)
 
-  const chirp = await createChirp({ body: cleaned, userId: params.userId });
+  const token = getBearerToken(req);
+  const userId = validateJWT(token, config.jwt.secret);
+
+  const cleaned = validateChirp(params.body);
+  const chirp = await createChirp({ body: cleaned, userId: userId });
 
   if (!chirp) {
     throw new Error("Could not create chirp");

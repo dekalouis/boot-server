@@ -15,6 +15,13 @@
       "when": 1791900078095,
       "tag": "0001_cold_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791904760048,
+      "tag": "0002_left_vindicator",
+      "breakpoints": true
     }
   ]
 }
