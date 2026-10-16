@@ -57,11 +57,18 @@ export async function handlerCreateChirp(req: Request, res: Response): Promise<v
 }
 
 export async function handlerGetChirps(req: Request, res: Response): Promise<void> {
-  const { authorId } = req.query;
-  if (authorId !== undefined && typeof authorId !== "string") {
-    throw new BadRequest("Invalid authorId");
+  let authorId = "";
+  const authorIdQuery = req.query.authorId;
+  if (typeof authorIdQuery === "string") {
+    authorId = authorIdQuery;
   }
+
   const chirpList = await getChirps(authorId);
+
+  if (req.query.sort === "desc") {
+    chirpList.reverse();
+  }
+
   respondWithJSON(res, 200, chirpList);
 }
 

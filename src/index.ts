@@ -8,8 +8,9 @@ import postgres from 'postgres';
 import { config } from './config.js';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import { handlerCreateUser, handlerUpdateUser, handlerWebhook } from './api/users.js';
+import { handlerCreateUser, handlerUpdateUser } from './api/users.js';
 import { handlerLogin, handlerRefresh, handlerRevoke } from './api/auth.js';
+import { handlerWebhook } from './api/webhooks.js';
 
 const migrationClient = postgres(config.db.dbURL, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
