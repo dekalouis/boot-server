@@ -1,6 +1,7 @@
 
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import type { JwtPayload } from "jsonwebtoken";
 import { BadRequest, Unauthorized } from "./api/errors.js";
 import { Request } from "express";
@@ -61,7 +62,7 @@ export function validateJWT(tokenString: string, secret: string): string {
 export function getBearerToken(req: Request) {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    throw new BadRequest("Malformed authorization header");
+    throw new Unauthorized("Malformed authorization header");
   }
 
   return extractBearerToken(authHeader);
@@ -73,4 +74,22 @@ export function extractBearerToken(header: string) {
     throw new BadRequest("Malformed authorization header");
   }
   return splitAuth[1];
+}
+
+export function makeRefreshToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+export function getAPIKey(req: Request) {
+  const authHeader = req.get("Authorization");
+
+  if (!authHeader) {
+    throw new Unauthorized("missing auth headers")
+  }
+
+  const headers = authHeader.split(" ")
+  if (headers[0] !== "ApiKey" || !headers[1]) {
+    throw new Unauthorized("wrong header type")
+  }
+  return headers[1]
 }

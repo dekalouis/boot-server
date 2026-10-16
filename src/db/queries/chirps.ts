@@ -11,10 +11,11 @@ export async function createChirp(chirp: Chirp) {
   return result;
 }
 
-export async function getChirps() {
+export async function getChirps(authorId?: string) {
   const result = await db
     .select()
     .from(chirps)
+    .where(authorId ? eq(chirps.userId, authorId) : undefined)
     .orderBy(asc(chirps.createdAt));
   return result;
 }
@@ -28,4 +29,10 @@ export async function getChirpById(chirpId: string) {
     return
   }
   return result[0];
+}
+
+export async function deleteChirp(chirpId: string) {
+  return await db
+    .delete(chirps)
+    .where(eq(chirps.id, chirpId));
 }

@@ -12,6 +12,7 @@ export type APIConfig = {
   port: number;
   platform: string;
   jwtSecret: string;
+  polkaKey: string;
 };
 
 export type DBConfig = {
@@ -21,6 +22,7 @@ export type DBConfig = {
 
 type JWTConfig = {
   defaultDuration: number;
+  refreshDuration: number;
   secret: string;
   issuer: string;
 };
@@ -44,6 +46,7 @@ export const config: Config = {
     fileServerHits: 0,
     port: Number(process.env.PORT) || 8080,
     platform: envOrThrow("PLATFORM"),
+    polkaKey: envOrThrow("POLKA_KEY"),
   } as APIConfig,
 
   db: {
@@ -52,6 +55,7 @@ export const config: Config = {
   },
   jwt: {
     defaultDuration: 60 * 60,
+    refreshDuration: 60 * 60 * 24 * 60 * 1000,
     secret: envOrThrow("JWT_SECRET"),
     issuer: "chirpy",
   },
